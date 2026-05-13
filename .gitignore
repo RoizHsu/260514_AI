@@ -81,3 +81,11 @@ build/
 *.so
 *.o
 *.c
+
+# SSL 證書和私鑰（不應上傳到 git）
+ssl/
+*.pem
+*.key
+*.crt
+*.csr
+

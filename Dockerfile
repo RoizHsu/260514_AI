@@ -4,9 +4,13 @@ FROM python:3.10-slim
 # 設置工作目錄
 WORKDIR /app
 
-# 安裝系統依賴
+# 安裝系統依賴（包括 Pillow 編譯所需）
 RUN apt-get update && apt-get install -y \
+    build-essential \
     libsm6 libxext6 libxrender-dev \
+    libjpeg-dev zlib1g-dev libfreetype6-dev \
+    liblcms2-dev libtiff-dev libwebp-dev \
+    libraqm-dev libssl-dev libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 複製後端文件

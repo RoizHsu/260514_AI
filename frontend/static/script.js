@@ -130,24 +130,36 @@ async function recognizeImage() {
 
 // 顯示識別結果
 function displayResults(data, timestamp) {
-    // 物體名稱
-    document.getElementById('objectName').textContent = data.object_name || '-';
+    // 預測數字
+    document.getElementById('predictedDigit').textContent = data.predicted_digit;
 
     // 置信度
-    const confidence = Math.round((data.confidence || 0) * 100);
+    const confidence = Math.round(parseFloat(data.confidence_percentage) * 100) / 100;
     const confidenceFill = document.getElementById('confidenceFill');
     confidenceFill.style.width = `${confidence}%`;
-    document.getElementById('confidenceText').textContent = `${confidence}%`;
+    document.getElementById('confidenceText').textContent = data.confidence_percentage;
+
+    // Top 3 預測
+    const predictionsList = document.getElementById('topPredictions');
+    predictionsList.innerHTML = '';
+    data.all_predictions.forEach(pred => {
+        const percentage = Math.round(pred.confidence * 100);
+        const item = document.createElement('div');
+        item.className = 'prediction-item';
+        item.innerHTML = `
+            <span class="prediction-digit">數字 ${pred.digit}</span>
+            <div class="prediction-bar">
+                <div class="prediction-bar-fill" style="width: ${percentage}%"></div>
+            </div>
+            <span>${percentage}%</span>
+        `;
+        predictionsList.appendChild(item);
+    });
 
     // 圖片尺寸
     const size = data.image_size;
     document.getElementById('imageSize').textContent = 
-        `${size.width} × ${size.height} px`;
-
-    // 特徵信息
-    const features = data.features;
-    const featureText = `邊緣檢測: ${features.edge_count}, 亮度: ${(features.brightness * 100).toFixed(1)}%`;
-    document.getElementById('features').textContent = featureText;
+        `原始: ${size.original[0]}×${size.original[1]} px → 處理: ${size.processed[0]}×${size.processed[1]} px`;
 
     // 時間戳
     const date = new Date(timestamp);
