@@ -4,7 +4,7 @@
 """
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import cv2
@@ -13,9 +13,10 @@ from PIL import Image
 import io
 import os
 from datetime import datetime
+from pathlib import Path
 
 app = FastAPI(
-    title="圖片識別 API",
+    title="圖片識別",
     description="提供圖片識別功能的 RESTful API",
     version="1.0.0"
 )
@@ -29,20 +30,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 設置文件路徑
+BASE_DIR = Path(__file__).parent.parent
+FRONTEND_DIR = BASE_DIR / "frontend"
+STATIC_DIR = FRONTEND_DIR / "static"
+
 # 掛載靜態文件
-static_dir = os.path.join(os.path.dirname(__file__), "../frontend/static")
-if os.path.exists(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
-@app.get("/")
-async def root():
-    """根路徑重定向到前端"""
-    return {
-        "message": "圖片識別 API",
-        "docs_url": "/docs",
-        "frontend_url": "/frontend"
-    }
+@app.get("/", response_class=HTMLResponse)
+async def serve_frontend():
+    """提供前端 HTML 文件"""
+    index_file = FRONTEND_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+    return """
+    <html>
+        <head><title>圖片識別系統</title></head>
+        <body>
+            <h1>圖片識別系統</h1>
+            <p>API 文檔: <a href="/docs">/docs</a></p>
+        </body>
+    </html>
+    """
 
 
 @app.post("/api/recognize")
