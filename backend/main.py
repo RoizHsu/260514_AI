@@ -159,4 +159,30 @@ def classify_image_simple(gray, edges, hsv):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import sys
+    from pathlib import Path
+    
+    # 檢查是否使用 HTTPS
+    ssl_keyfile = None
+    ssl_certfile = None
+    
+    # 尋找 SSL 證書
+    ssl_dir = Path(__file__).parent.parent / "ssl"
+    if ssl_dir.exists():
+        cert_file = ssl_dir / "cert.pem"
+        key_file = ssl_dir / "key.pem"
+        
+        if cert_file.exists() and key_file.exists():
+            ssl_certfile = str(cert_file)
+            ssl_keyfile = str(key_file)
+            print("🔐 使用 HTTPS")
+    
+    # 啟動 Uvicorn 服務器
+    uvicorn.run(
+        app,
+        host="127.0.0.1",  # 改為 localhost，而不是 0.0.0.0
+        port=8000,
+        ssl_keyfile=ssl_keyfile,
+        ssl_certfile=ssl_certfile,
+        reload=True
+    )
