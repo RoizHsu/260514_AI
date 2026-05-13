@@ -187,5 +187,68 @@
     "confidence": 0.1156863272190094,
     "timestamp": "2026-05-13T15:46:13.814631",
     "recorded_at": "2026-05-13T15:46:19.112481"
+  },
+  {
+    "predicted_digit": 3,
+    "correct_digit": 6,
+    "confidence": 0.11436682194471359,
+    "timestamp": "2026-05-13T15:56:21.884677",
+    "recorded_at": "2026-05-13T15:56:26.301426"
+  },
+  {
+    "predicted_digit": 3,
+    "correct_digit": 6,
+    "confidence": 0.11335226148366928,
+    "timestamp": "2026-05-13T15:56:38.108545",
+    "recorded_at": "2026-05-13T15:56:40.868757"
+  },
+  {
+    "predicted_digit": 3,
+    "correct_digit": 6,
+    "confidence": 0.11335226148366928,
+    "timestamp": "2026-05-13T15:56:38.108545",
+    "recorded_at": "2026-05-13T15:56:45.004936"
+  },
+  {
+    "predicted_digit": 9,
+    "correct_digit": 0,
+    "confidence": 0.12976212799549103,
+    "timestamp": "2026-05-13T15:56:48.713479",
+    "recorded_at": "2026-05-13T15:56:50.532740"
+  },
+  {
+    "predicted_digit": 2,
+    "correct_digit": 0,
+    "confidence": 0.12098056077957153,
+    "timestamp": "2026-05-13T15:56:52.456388",
+    "recorded_at": "2026-05-13T15:56:59.464203"
+  },
+  {
+    "predicted_digit": 9,
+    "correct_digit": 0,
+    "confidence": 0.1299564391374588,
+    "timestamp": "2026-05-13T15:57:07.443093",
+    "recorded_at": "2026-05-13T15:57:13.395977"
+  },
+  {
+    "predicted_digit": 9,
+    "correct_digit": 0,
+    "confidence": 0.11813806742429733,
+    "timestamp": "2026-05-13T15:57:19.822625",
+    "recorded_at": "2026-05-13T15:57:22.958814"
+  },
+  {
+    "predicted_digit": 9,
+    "correct_digit": 0,
+    "confidence": 0.12242057174444199,
+    "timestamp": "2026-05-13T15:57:30.100101",
+    "recorded_at": "2026-05-13T15:57:32.955735"
+  },
+  {
+    "predicted_digit": 9,
+    "correct_digit": 0,
+    "confidence": 0.1154651939868927,
+    "timestamp": "2026-05-13T15:57:40.105821",
+    "recorded_at": "2026-05-13T15:57:42.293443"
   }
 ]
