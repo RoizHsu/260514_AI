@@ -6,3 +6,4 @@ opencv-python==4.13.0.92
 Pillow==12.2.0
 python-dotenv==1.2.2
 pydantic==2.13.4
+cryptography==42.0.7
