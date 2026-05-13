@@ -1,7 +1,7 @@
 # 手寫數字識別系統
 
 完整的深度學習手寫數字識別系統，採用 PyTorch CNN+Transformer 混合架構，包含 RESTful API、Web UI 和 Docker 容器化部署。
-用dcoker匯入後打入 docker run -d --name test-digit-api -p 8000:8000 260514_ai:v3就可以進入http://localhost:8000網頁
+用dcoker匯入後打入 docker run -d --name <container_id or name> -p 8000:8000 260514_ai:v3就可以進入http://localhost:8000網頁
 
 ## ✨ 功能特性
 
