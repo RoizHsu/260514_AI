@@ -4,19 +4,23 @@
 import torch
 import os
 import sys
+from pathlib import Path
 
-# 動態查找模型文件
+# 智能查找模型文件 - 支持相對路徑
+script_dir = Path(__file__).parent
+project_root = script_dir.parent
+
 possible_paths = [
-    "content/model_weights.pth",
-    "C:/Users/HsuRoiz/Documents/260514_AI/content/model_weights.pth",
-    os.path.expanduser("~/Documents/260514_AI/content/model_weights.pth")
+    project_root / "content" / "model_weights.pth",
+    script_dir / "content" / "model_weights.pth",
+    Path("content") / "model_weights.pth",
 ]
 
 MODEL_PATH = None
 for path in possible_paths:
-    if os.path.exists(path):
-        MODEL_PATH = path
-        print(f"✅ 找到模型: {path}")
+    if path.exists():
+        MODEL_PATH = str(path)
+        print(f"✅ 找到模型: {path.absolute()}")
         break
 
 if not MODEL_PATH:
@@ -27,7 +31,7 @@ if not MODEL_PATH:
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from model_compat_new import SimpleDirectModel, get_model_class
+    from model_compat import SimpleDirectModel, get_model_class
     
     # 加載權重
     print("\n📊 加載權重...")

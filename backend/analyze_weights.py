@@ -3,17 +3,21 @@
 
 import torch
 import os
+from pathlib import Path
 
-# 動態查找模型文件
+# 智能查找模型文件 - 支持相對路徑
+script_dir = Path(__file__).parent
+project_root = script_dir.parent
+
 possible_paths = [
-    "content/model_weights.pth",
-    "C:/Users/HsuRoiz/Documents/260514_AI/content/model_weights.pth",
-    os.path.expanduser("~/Documents/260514_AI/content/model_weights.pth")
+    project_root / "content" / "model_weights.pth",  # 從 backend 目錄相對查找
+    script_dir / "content" / "model_weights.pth",     # 從同級目錄查找
+    Path("content") / "model_weights.pth",             # 當前目錄
 ]
 
 MODEL_PATH = None
 for path in possible_paths:
-    if os.path.exists(path):
+    if path.exists():
         MODEL_PATH = path
         break
 
@@ -21,8 +25,10 @@ if not MODEL_PATH:
     print(f"❌ 找不到模型文件")
     print(f"搜索位置:")
     for path in possible_paths:
-        print(f"  - {path}")
+        print(f"  - {path.absolute()}")
     exit(1)
+
+MODEL_PATH = str(MODEL_PATH)  # 轉換為字符串供 torch.load 使用
 
 # 加載權重
 state_dict = torch.load(MODEL_PATH, map_location='cpu')
