@@ -67,7 +67,11 @@ def load_model_from_path():
             state_dict = checkpoint
         
         # 自動檢測模型架構
-        from model_compat import get_model_class
+        try:
+            from backend.model_compat import get_model_class
+        except ImportError:
+            from model_compat import get_model_class
+        
         ModelClass = get_model_class(state_dict)
         
         logger.info(f"   模型架構: {ModelClass.__name__}")

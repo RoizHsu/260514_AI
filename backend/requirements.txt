@@ -8,11 +8,11 @@ torch>=2.0.0
 torchvision>=0.15.0
 
 # 數據處理
-numpy==2.4.4
+numpy>=2.0.0,<3.0
 scikit-learn>=1.3.0
 
-# 圖像處理
-opencv-python==4.13.0.92
+# 圖像處理 (使用 headless 版本，無 GUI 依賴)
+opencv-python-headless==4.13.0.92
 Pillow==12.2.0
 
 # 工具庫

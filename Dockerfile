@@ -11,20 +11,22 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# 安裝系統依賴（包括 Pillow 和 OpenCV 編譯所需）
+# 安裝系統依賴（包括 Pillow 和 OpenCV headless 版本所需）
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libsm6 libxext6 libxrender-dev \
+    libsm6 libxext6 \
     libjpeg-dev zlib1g-dev libfreetype6-dev \
     liblcms2-dev libtiff-dev libwebp-dev \
-    libraqm-dev libssl-dev libffi-dev \
+    libssl-dev libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 複製依賴清單
 COPY backend/requirements.txt .
 
-# 安裝 Python 依賴
-RUN pip install --no-cache-dir -r requirements.txt
+# 安裝 Python 依賴 (使用 PyTorch 官方索引加速 + 默認 PyPI)
+RUN pip install --no-cache-dir \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
+    -r requirements.txt
 
 # 複製整個項目
 COPY . /app

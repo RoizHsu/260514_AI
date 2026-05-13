@@ -1,49 +1,59 @@
-# 圖片識別系統
+# 手寫數字識別系統
 
-一個完整的圖片識別系統，包含 RESTful API、前端網頁和 Docker 支持。
+完整的深度學習手寫數字識別系統，採用 PyTorch CNN+Transformer 混合架構，包含 RESTful API、Web UI 和 Docker 容器化部署。
 
-## 功能特性
+## ⚡ 一鍵啟動
 
-- ✅ **RESTful API** - FastAPI 框架，自動生成 Swagger 文檔
-- ✅ **Swagger 文檔** - `/docs` 端點提供交互式 API 文檔
-- ✅ **前端網頁** - 響應式設計，支持拖放上傳
-- ✅ **Docker 支持** - 一鍵部署，包含 Nginx 反向代理
-- ✅ **CORS 支持** - 支持跨域請求
-- ✅ **圖片識別** - 支持 JPEG 和 PNG 格式
-
-## 系統架構
-
-```
-┌─────────────────────┐
-│   前端（HTML/JS）   │
-└──────────┬──────────┘
-           │
-        HTTP
-           │
-┌──────────▼──────────┐
-│   Nginx 反向代理    │
-└──────────┬──────────┘
-           │
-        HTTP
-           │
-┌──────────▼──────────┐
-│   FastAPI 後端      │
-│  (圖片識別邏輯)     │
-└─────────────────────┘
+```bash
+docker-compose up
 ```
 
-## 快速開始
+訪問: **http://localhost:8000** 📸
+
+---
+
+## ✨ 功能特性
+
+- ✅ **Web UI** - 拖拽上傳手寫數字圖片，實時識別
+- ✅ **REST API** - FastAPI 框架，自動生成 Swagger 文檔 (/docs)
+- ✅ **深度學習模型** - 預訓練 PyTorch CNN+Transformer（1.9M 參數）
+- ✅ **用戶反饋** - 收集識別結果和正確標籤，改進模型
+- ✅ **Docker 部署** - 一鍵部署，跨平台運行
+- ✅ **健康檢查** - 自動監控系統狀態
+
+## 🏗️ 系統架構
+
+```
+客戶端瀏覽器
+    ↓
+Web UI (HTML5/CSS3/JS)
+    ↓
+FastAPI REST API (Port 8000)
+    ↓
+PyTorch CNN+Transformer Model
+    ↓
+數字分類 (0-9)
+```
+
+## 🚀 快速開始
+
+### 前置要求
+
+- Docker 19.03+
+- Docker Compose 1.25+
+- 2GB 可用磁盤空間
+- 網路連接（首次下載 ~2GB）
 
 ### 方法 1：使用 Docker Compose（推薦）
 
 ```bash
 # 啟動整個系統
-docker-compose up --build
+docker-compose up
 
 # 系統會在以下地址運行：
-# 前端: http://localhost
-# API Swagger: http://localhost/docs
-# API: http://localhost/api
+# Web UI: http://localhost:8000
+# API 文檔: http://localhost:8000/docs
+# 健康檢查: http://localhost:8000/api/health
 ```
 
 ### 方法 2：本地運行
@@ -58,18 +68,17 @@ pip install -r requirements.txt
 #### 2. 啟動 FastAPI 服務器
 
 ```bash
-python main.py
-# 或使用 uvicorn
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+cd ..
+python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 #### 3. 訪問應用
 
 打開瀏覽器訪問：
-- 前端: `http://localhost:8000/`
+- Web UI: `http://localhost:8000/`
 - API 文檔: `http://localhost:8000/docs`
 
-## API 端點
+## 📚 API 文檔
 
 ### 健康檢查
 
@@ -81,7 +90,9 @@ GET /api/health
 ```json
 {
   "status": "healthy",
-  "timestamp": "2024-01-15T10:30:00.000000"
+  "model_status": "已加載",
+  "device": "cpu",
+  "timestamp": "2026-05-13T09:07:57.632176"
 }
 ```
 
@@ -97,107 +108,176 @@ file: <binary image data>
 **響應示例：**
 ```json
 {
-  "success": true,
-  "data": {
-    "object_name": "複雜物體",
-    "confidence": 0.85,
-    "image_size": {
-      "width": 1920,
-      "height": 1080
-    },
-    "features": {
-      "edge_count": 45289,
-      "brightness": 0.65
-    }
-  },
-  "timestamp": "2024-01-15T10:30:00.000000"
+  "predicted_digit": 8,
+  "confidence": 0.9523,
+  "all_predictions": [
+    {"digit": 8, "confidence": 0.9523},
+    {"digit": 3, "confidence": 0.0421},
+    {"digit": 0, "confidence": 0.0056}
+  ]
 }
 ```
 
-## 項目結構
+### 獲取統計數據
+
+```http
+GET /api/stats
+```
+
+### 提交用戶反饋
+
+```http
+POST /api/feedback
+Content-Type: application/json
+
+{
+  "predicted_digit": 3,
+  "correct_digit": 8,
+  "confidence": 0.95
+}
+```
+
+## 📂 項目結構
 
 ```
 260514_AI/
 ├── backend/
-│   ├── main.py                 # FastAPI 應用
-│   └── requirements.txt         # Python 依賴
+│   ├── main.py                 # FastAPI 應用程式
+│   ├── model_compat.py         # 模型架構自動檢測
+│   ├── requirements.txt         # Python 依賴
+│   └── test_model_loading.py   # 模型測試腳本
 ├── frontend/
-│   ├── index.html              # 主頁面
+│   ├── index.html              # Web UI 主頁面
 │   └── static/
-│       ├── style.css           # 樣式文件
+│       ├── style.css           # 樣式（黑/灰色主題）
 │       └── script.js           # 客戶端邏輯
+├── content/
+│   ├── model_weights.pth       # 預訓練 PyTorch 模型
+│   └── feedback.json           # 用戶反饋數據
 ├── Dockerfile                  # Docker 映像配置
 ├── docker-compose.yml          # Docker Compose 配置
-├── nginx.conf                  # Nginx 配置
-├── .gitignore                  # Git 忽略文件
+├── DEPLOYMENT.md               # 詳細部署指南
 └── README.md                   # 本文檔
 ```
 
-## 技術棧
+## 🔧 技術棧
 
 ### 後端
-- **FastAPI** - 高性能 Python Web 框架
+- **FastAPI 0.136.1** - 高性能 Python Web 框架
+- **PyTorch 2.x** - 深度學習框架（CNN+Transformer）
 - **Uvicorn** - ASGI 應用服務器
-- **OpenCV** - 圖片處理和計算機視覺
+- **OpenCV** - 圖片處理
 - **Pillow** - 圖片操作
-- **NumPy** - 數值計算
 
 ### 前端
 - **HTML5** - 標記語言
 - **CSS3** - 樣式和動畫
 - **JavaScript** - 交互邏輯
-- **Fetch API** - 網絡請求
 
 ### 基礎設施
 - **Docker** - 容器化
-- **Nginx** - 反向代理和靜態文件服務
 - **Docker Compose** - 多容器編排
 
-## 環境變量
+## 📋 常用命令
 
-創建 `.env` 文件（可選）：
+| 命令 | 用途 |
+|------|------|
+| `docker-compose up` | 前台啟動（查看日誌） |
+| `docker-compose up -d` | 後台啟動 |
+| `docker-compose down` | 停止服務 |
+| `docker-compose logs -f api` | 查看實時日誌 |
+| `docker-compose ps` | 查看容器狀態 |
 
-```env
-# API 配置
-API_HOST=0.0.0.0
-API_PORT=8000
-DEBUG=False
+## ⚙️ 環境配置
 
-# 圖片配置
-MAX_IMAGE_SIZE=10485760
-ALLOWED_FORMATS=jpeg,png
+### 系統要求
+- CPU: 1+ 核心（推薦 2+ 核心）
+- 記憶體: 2GB+（推薦 4GB+）
+- 存儲: 2GB+（用於模型和依賴）
+
+### Docker 資源限制
+
+編輯 `docker-compose.yml` 添加資源限制（可選）：
+
+```yaml
+services:
+  api:
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
 ```
 
-## 部署指南
+## 🐛 故障排查
 
-### AWS 部署
+### 連接被拒絕
 
-1. **建立 EC2 實例**
+```
+error: connection refused at 127.0.0.1:8000
+```
+
+解決方案：
+```bash
+docker-compose ps              # 檢查容器是否運行
+docker-compose logs api        # 查看錯誤日誌
+docker-compose restart api     # 重啟服務
+```
+
+### 模型加載失敗
+
+檢查 `content/model_weights.pth` 是否存在且完整。
+
+### 端口被佔用
 
 ```bash
-# 安裝 Docker
-sudo yum update -y
-sudo yum install docker -y
-sudo service docker start
-
-# 安裝 Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+# 改用其他端口，編輯 docker-compose.yml：
+ports:
+  - "9000:8000"  # 改為 9000
 ```
 
-2. **部署應用**
+## 📊 生產部署建議
+
+詳見 [DEPLOYMENT.md](DEPLOYMENT.md)
+
+主要包括：
+- 移除開發模式 `--reload` 標誌
+- 配置反向代理（Nginx）
+- 設置持久化卷
+- 配置日誌和監控
+- 實施負載測試
+
+## ✅ 部署驗證
 
 ```bash
-# 克隆倉庫
-git clone <your-repo-url>
-cd 260514_AI
+# 1. 檢查容器運行狀態
+docker-compose ps
+# 預期: api 容器狀態為 "Up"
 
-# 啟動服務
-docker-compose up -d
+# 2. 健康檢查
+curl http://localhost:8000/api/health
 
-# 查看日誌
-docker-compose logs -f
+# 3. 訪問 Web UI
+# 瀏覽器打開: http://localhost:8000
+
+# 4. 查看 API 文檔
+# 瀏覽器打開: http://localhost:8000/docs
 ```
+
+## 📞 技術支持
+
+遇到問題？查看 [DEPLOYMENT.md](DEPLOYMENT.md) 中的故障排查部分。
+
+## 📄 許可證
+
+本項目為教學和商業用途開發。
+
+---
+
+**開始部署：`docker-compose up` 🚀**
 
 ### 阿里雲 / 騰訊雲部署
 
