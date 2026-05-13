@@ -159,5 +159,33 @@
     "confidence": 0.12283612787723541,
     "timestamp": "2026-05-13T15:38:27.555069",
     "recorded_at": "2026-05-13T15:42:10.013833"
+  },
+  {
+    "predicted_digit": 5,
+    "correct_digit": 6,
+    "confidence": 0.11627804487943649,
+    "timestamp": "2026-05-13T15:45:05.864436",
+    "recorded_at": "2026-05-13T15:45:10.483971"
+  },
+  {
+    "predicted_digit": 5,
+    "correct_digit": 6,
+    "confidence": 0.12237296253442764,
+    "timestamp": "2026-05-13T15:45:36.910715",
+    "recorded_at": "2026-05-13T15:45:40.906258"
+  },
+  {
+    "predicted_digit": 5,
+    "correct_digit": 6,
+    "confidence": 0.12182716280221939,
+    "timestamp": "2026-05-13T15:45:50.493797",
+    "recorded_at": "2026-05-13T15:46:01.648487"
+  },
+  {
+    "predicted_digit": 5,
+    "correct_digit": 6,
+    "confidence": 0.1156863272190094,
+    "timestamp": "2026-05-13T15:46:13.814631",
+    "recorded_at": "2026-05-13T15:46:19.112481"
   }
 ]
