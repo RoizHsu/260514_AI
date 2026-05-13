@@ -1,0 +1,163 @@
+[
+  {
+    "predicted_digit": 6,
+    "correct_digit": 7,
+    "confidence": 0.12022820115089417,
+    "timestamp": "2026-05-13T15:33:41.479134",
+    "recorded_at": "2026-05-13T15:33:55.212166"
+  },
+  {
+    "predicted_digit": 8,
+    "correct_digit": 7,
+    "confidence": 0.12658381462097168,
+    "timestamp": "2026-05-13T15:34:12.173769",
+    "recorded_at": "2026-05-13T15:34:17.140684"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 7,
+    "confidence": 0.114143505692482,
+    "timestamp": "2026-05-13T15:34:24.730838",
+    "recorded_at": "2026-05-13T15:34:28.205545"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 6,
+    "confidence": 0.13468070328235626,
+    "timestamp": "2026-05-13T15:35:04.434559",
+    "recorded_at": "2026-05-13T15:35:07.093977"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 6,
+    "confidence": 0.11981993168592453,
+    "timestamp": "2026-05-13T15:35:13.518083",
+    "recorded_at": "2026-05-13T15:35:17.664823"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 6,
+    "confidence": 0.11981993168592453,
+    "timestamp": "2026-05-13T15:35:13.518083",
+    "recorded_at": "2026-05-13T15:35:20.863933"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 5,
+    "confidence": 0.12286025285720825,
+    "timestamp": "2026-05-13T15:35:28.434490",
+    "recorded_at": "2026-05-13T15:35:31.575975"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11964884400367737,
+    "timestamp": "2026-05-13T15:35:33.782235",
+    "recorded_at": "2026-05-13T15:35:36.310993"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 5,
+    "confidence": 0.1187751516699791,
+    "timestamp": "2026-05-13T15:35:37.866551",
+    "recorded_at": "2026-05-13T15:35:40.174771"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 5,
+    "confidence": 0.12392470240592957,
+    "timestamp": "2026-05-13T15:35:41.445268",
+    "recorded_at": "2026-05-13T15:35:44.651885"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.12118194997310638,
+    "timestamp": "2026-05-13T15:35:55.340237",
+    "recorded_at": "2026-05-13T15:35:59.320776"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11340948194265366,
+    "timestamp": "2026-05-13T15:36:06.803410",
+    "recorded_at": "2026-05-13T15:36:10.527900"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11340948194265366,
+    "timestamp": "2026-05-13T15:36:06.803410",
+    "recorded_at": "2026-05-13T15:36:16.749439"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11340948194265366,
+    "timestamp": "2026-05-13T15:36:06.803410",
+    "recorded_at": "2026-05-13T15:36:17.154510"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11340948194265366,
+    "timestamp": "2026-05-13T15:36:06.803410",
+    "recorded_at": "2026-05-13T15:36:17.372595"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11340948194265366,
+    "timestamp": "2026-05-13T15:36:06.803410",
+    "recorded_at": "2026-05-13T15:36:17.532518"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11340948194265366,
+    "timestamp": "2026-05-13T15:36:06.803410",
+    "recorded_at": "2026-05-13T15:36:17.688338"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 5,
+    "confidence": 0.11340948194265366,
+    "timestamp": "2026-05-13T15:36:06.803410",
+    "recorded_at": "2026-05-13T15:36:17.836910"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 5,
+    "confidence": 0.11632683128118515,
+    "timestamp": "2026-05-13T15:36:25.352005",
+    "recorded_at": "2026-05-13T15:36:31.641702"
+  },
+  {
+    "predicted_digit": 1,
+    "correct_digit": 3,
+    "confidence": 0.11738582700490952,
+    "timestamp": "2026-05-13T15:37:44.483170",
+    "recorded_at": "2026-05-13T15:37:49.786259"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 4,
+    "confidence": 0.11920265108346939,
+    "timestamp": "2026-05-13T15:38:00.990782",
+    "recorded_at": "2026-05-13T15:38:05.506820"
+  },
+  {
+    "predicted_digit": 7,
+    "correct_digit": 0,
+    "confidence": 0.10955139249563217,
+    "timestamp": "2026-05-13T15:38:14.405311",
+    "recorded_at": "2026-05-13T15:38:19.146750"
+  },
+  {
+    "predicted_digit": 6,
+    "correct_digit": 6,
+    "confidence": 0.12283612787723541,
+    "timestamp": "2026-05-13T15:38:27.555069",
+    "recorded_at": "2026-05-13T15:42:10.013833"
+  }
+]
