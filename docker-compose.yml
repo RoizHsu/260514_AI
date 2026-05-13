@@ -2,38 +2,33 @@ version: '3.8'
 
 services:
   api:
-    build: .
-    container_name: image-recognition-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: digit-recognition-api
     ports:
-      - "8000:8000"
-      - "443:443"  # HTTPS 端口
+      - "8000:8000"  # API 端口
     volumes:
-      - ./frontend:/app/frontend
-      - ./backend:/app/backend
-      - ./ssl:/app/ssl  # SSL 證書目錄
+      - ./frontend:/app/frontend  # 前端文件
+      - ./backend:/app/backend    # 後端代碼
+      - ./content:/app/content    # 模型和數據
     environment:
       - PYTHONUNBUFFERED=1
-      - USE_HTTPS=false  # 可設置為 true 使用 HTTPS
-    command: python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+      - PYTHONDONTWRITEBYTECODE=1
+    command: >
+      python -m uvicorn backend.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
     networks:
-      - recognition-network
-
-  # 可選：Nginx 反向代理
-  nginx:
-    image: nginx:alpine
-    container_name: image-recognition-nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./frontend:/usr/share/nginx/html:ro
-      - ./ssl:/etc/nginx/ssl:ro  # 掛載 SSL 證書
-    depends_on:
-      - api
-    networks:
-      - recognition-network
+      - digit-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
-  recognition-network:
+  digit-network:
     driver: bridge
