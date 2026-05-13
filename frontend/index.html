@@ -69,6 +69,35 @@
                             <label>識別時間：</label>
                             <p id="timestamp">-</p>
                         </div>
+
+                        <!-- 反饋/標籤部分 -->
+                        <div class="feedback-section">
+                            <h4>🎓 AI 學習反饋</h4>
+                            <p class="feedback-hint">幫助 AI 改進：選擇正確數字或輸入正確答案</p>
+                            
+                            <div class="feedback-options">
+                                <div class="quick-select">
+                                    <p class="option-label">快速選擇 Top 3：</p>
+                                    <div id="quickSelectButtons" class="button-group"></div>
+                                </div>
+
+                                <div class="manual-input">
+                                    <p class="option-label">或手動輸入正確數字 (0-9)：</p>
+                                    <div class="input-group">
+                                        <input type="number" id="correctDigitInput" 
+                                               min="0" max="9" placeholder="輸入 0-9" 
+                                               class="digit-input">
+                                        <button id="submitFeedbackBtn" class="btn btn-feedback">
+                                            ✓ 提交反饋
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="feedbackStatus" class="feedback-status hidden">
+                                <p id="feedbackMessage"></p>
+                            </div>
+                        </div>
                     </div>
                     <button id="resetBtn" class="btn btn-secondary">重新識別</button>
                 </div>

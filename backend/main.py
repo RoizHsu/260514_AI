@@ -14,10 +14,12 @@ from PIL import Image
 import torch
 import io
 import os
+import json
 from datetime import datetime
 from pathlib import Path
 from contextlib import asynccontextmanager
 import logging
+from pydantic import BaseModel
 
 # 配置日誌
 logging.basicConfig(level=logging.INFO)
@@ -26,9 +28,19 @@ logger = logging.getLogger(__name__)
 # 模型相關常量
 MODEL_PATH = Path(__file__).parent.parent / "content" / "model_weights.pth"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+FEEDBACK_FILE = Path(__file__).parent.parent / "content" / "feedback.json"
 
 # 全局模型變量
 model = None
+
+
+# 反饋數據模型
+class FeedbackData(BaseModel):
+    """用戶反饋數據"""
+    predicted_digit: int
+    correct_digit: int
+    confidence: float
+    timestamp: str
 
 
 def load_model_from_path():
@@ -244,6 +256,103 @@ async def get_stats():
         "output_classes": 10,
         "timestamp": datetime.now().isoformat()
     }
+
+
+@app.post("/api/feedback")
+async def submit_feedback(feedback: FeedbackData):
+    """
+    接收用戶對識別結果的反饋
+    
+    - **predicted_digit**: AI 預測的數字
+    - **correct_digit**: 用戶指出的正確數字
+    - **confidence**: AI 的置信度
+    - **timestamp**: 識別時的時間戳
+    
+    返回：反饋記錄狀態
+    """
+    try:
+        feedback_dict = feedback.dict()
+        feedback_dict['recorded_at'] = datetime.now().isoformat()
+        
+        # 讀取現有反饋
+        feedback_list = []
+        if FEEDBACK_FILE.exists():
+            try:
+                with open(FEEDBACK_FILE, 'r', encoding='utf-8') as f:
+                    feedback_list = json.load(f)
+            except json.JSONDecodeError:
+                logger.warning("反饋文件格式錯誤，重新初始化")
+                feedback_list = []
+        
+        # 添加新反饋
+        feedback_list.append(feedback_dict)
+        
+        # 寫入反饋文件
+        with open(FEEDBACK_FILE, 'w', encoding='utf-8') as f:
+            json.dump(feedback_list, f, ensure_ascii=False, indent=2)
+        
+        logger.info(
+            f"✓ 反饋已記錄: 預測={feedback.predicted_digit}, "
+            f"正確={feedback.correct_digit}, 置信度={feedback.confidence:.2%}"
+        )
+        
+        return {
+            "success": True,
+            "message": f"✓ 反饋已記錄！感謝您幫助 AI 改進 (正確數字: {feedback.correct_digit})",
+            "feedback_count": len(feedback_list),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"反饋記錄失敗: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"反饋記錄失敗: {str(e)}"
+        )
+
+
+@app.get("/api/feedback/stats")
+async def get_feedback_stats():
+    """獲取反饋統計信息"""
+    try:
+        if not FEEDBACK_FILE.exists():
+            return {
+                "total_feedback": 0,
+                "accuracy_from_feedback": 0,
+                "message": "暫無反饋數據"
+            }
+        
+        with open(FEEDBACK_FILE, 'r', encoding='utf-8') as f:
+            feedback_list = json.load(f)
+        
+        if not feedback_list:
+            return {
+                "total_feedback": 0,
+                "accuracy_from_feedback": 0,
+                "message": "暫無反饋數據"
+            }
+        
+        # 計算 AI 正確率
+        correct_count = sum(
+            1 for fb in feedback_list 
+            if fb['predicted_digit'] == fb['correct_digit']
+        )
+        
+        accuracy = correct_count / len(feedback_list) * 100
+        
+        return {
+            "total_feedback": len(feedback_list),
+            "correct_predictions": correct_count,
+            "accuracy_from_feedback": f"{accuracy:.2f}%",
+            "recorded_at": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"獲取反饋統計失敗: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"獲取統計失敗: {str(e)}"
+        )
 
 
 if __name__ == "__main__":
