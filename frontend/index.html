@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片識別系統</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖼️ 圖片識別系統</h1>
+            <p>上傳圖片進行智能識別</p>
+        </header>
+
+        <main>
+            <!-- 上傳區域 -->
+            <div class="upload-section">
+                <div class="drop-zone" id="dropZone">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <h3>拖放圖片到此處或點擊選擇</h3>
+                    <p>支持 JPEG 和 PNG 格式</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+            </div>
+
+            <!-- 預覽區域 -->
+            <div id="previewContainer" class="preview-container hidden">
+                <div class="preview-section">
+                    <h3>圖片預覽</h3>
+                    <img id="previewImage" alt="圖片預覽">
+                </div>
+
+                <!-- 結果區域 -->
+                <div class="result-section">
+                    <button id="recognizeBtn" class="btn btn-primary">開始識別</button>
+                </div>
+            </div>
+
+            <!-- 識別結果 -->
+            <div id="resultContainer" class="result-container hidden">
+                <div class="result-card">
+                    <h3>識別結果</h3>
+                    <div class="result-content">
+                        <div class="result-item">
+                            <label>物體名稱：</label>
+                            <p id="objectName">-</p>
+                        </div>
+                        <div class="result-item">
+                            <label>置信度：</label>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidenceFill"></div>
+                            </div>
+                            <p id="confidenceText">0%</p>
+                        </div>
+                        <div class="result-item">
+                            <label>圖片尺寸：</label>
+                            <p id="imageSize">-</p>
+                        </div>
+                        <div class="result-item">
+                            <label>特徵信息：</label>
+                            <p id="features">-</p>
+                        </div>
+                        <div class="result-item">
+                            <label>識別時間：</label>
+                            <p id="timestamp">-</p>
+                        </div>
+                    </div>
+                    <button id="resetBtn" class="btn btn-secondary">重新識別</button>
+                </div>
+            </div>
+
+            <!-- API 文檔連結 -->
+            <div class="api-section">
+                <h3>🔗 API 文檔</h3>
+                <p>查看完整的 API 文檔和測試介面</p>
+                <a href="/docs" target="_blank" class="btn btn-link">Swagger API 文檔</a>
+                <a href="/redoc" target="_blank" class="btn btn-link">ReDoc 文檔</a>
+            </div>
+
+            <!-- 載入指示器 -->
+            <div id="loadingOverlay" class="loading-overlay hidden">
+                <div class="spinner"></div>
+                <p>正在識別圖片...</p>
+            </div>
+
+            <!-- 錯誤信息 -->
+            <div id="errorMessage" class="error-message hidden"></div>
+        </main>
+
+        <footer>
+            <p>圖片識別系統 v1.0 | API 端點: <code>/api/recognize</code></p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
