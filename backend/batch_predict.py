@@ -10,6 +10,7 @@ import torch
 from pathlib import Path
 import logging
 from tqdm import tqdm
+from model_compat import DigitRecognitionCNN, DigitRecognitionTransformer, get_model_class
 
 # 配置日誌
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -24,33 +25,6 @@ SUBMISSION_PATH = PROJECT_ROOT / "content" / "submission.csv"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-class DigitRecognitionCNN(torch.nn.Module):
-    """手寫數字識別 CNN 模型"""
-    def __init__(self):
-        super(DigitRecognitionCNN, self).__init__()
-        self.conv1 = torch.nn.Conv2d(1, 32, kernel_size=3, padding=1)
-        self.relu1 = torch.nn.ReLU()
-        self.pool1 = torch.nn.MaxPool2d(kernel_size=2)
-        
-        self.conv2 = torch.nn.Conv2d(32, 64, kernel_size=3, padding=1)
-        self.relu2 = torch.nn.ReLU()
-        self.pool2 = torch.nn.MaxPool2d(kernel_size=2)
-        
-        self.fc1 = torch.nn.Linear(64 * 7 * 7, 128)
-        self.relu3 = torch.nn.ReLU()
-        self.dropout = torch.nn.Dropout(0.5)
-        self.fc2 = torch.nn.Linear(128, 10)
-    
-    def forward(self, x):
-        x = self.pool1(self.relu1(self.conv1(x)))
-        x = self.pool2(self.relu2(self.conv2(x)))
-        x = x.view(-1, 64 * 7 * 7)
-        x = self.relu3(self.fc1(x))
-        x = self.dropout(x)
-        x = self.fc2(x)
-        return x
-
-
 def load_model():
     """加載已訓練的模型"""
     logger.info(f"🔧 加載模型 (設備: {DEVICE})...")
@@ -58,19 +32,34 @@ def load_model():
     if not MODEL_PATH.exists():
         raise FileNotFoundError(f"❌ 模型文件不存在: {MODEL_PATH}")
     
-    model = DigitRecognitionCNN().to(DEVICE)
+    # 加載檢查點
+    checkpoint = torch.load(str(MODEL_PATH), map_location=DEVICE)
+    
+    # 提取 state_dict
+    if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
+        state_dict = checkpoint['state_dict']
+    elif isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
+        state_dict = checkpoint['model_state_dict']
+    else:
+        state_dict = checkpoint
+    
+    # 自動選擇模型架構
     try:
-        checkpoint = torch.load(str(MODEL_PATH), map_location=DEVICE)
-        if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
-            model.load_state_dict(checkpoint['model_state_dict'])
-        elif isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
-            model.load_state_dict(checkpoint['state_dict'])
-        else:
-            model.load_state_dict(checkpoint)
-        logger.info("✓ 模型加載成功！")
-    except Exception as e:
-        logger.warning(f"⚠️  無法加載模型權重: {e}")
-        logger.info("  使用隨機初始化的模型進行演示...")
+        from model_compat import get_model_class
+        ModelClass = get_model_class(state_dict)
+    except:
+        logger.warning("⚠️  無法自動檢測模型，使用 CNN")
+        ModelClass = DigitRecognitionCNN
+    
+    model = ModelClass().to(DEVICE)
+    
+    try:
+        model.load_state_dict(state_dict, strict=True)
+        logger.info("✓ 模型加載成功 (完全匹配)！")
+    except RuntimeError:
+        logger.warning("⚠️  使用寬鬆匹配")
+        model.load_state_dict(state_dict, strict=False)
+        logger.info("✓ 模型加載成功 (寬鬆匹配)！")
     
     model.eval()
     return model

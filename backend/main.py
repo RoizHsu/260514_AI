@@ -47,8 +47,6 @@ def load_model_from_path():
     """加載模型到內存"""
     global model
     try:
-        from model import DigitRecognitionCNN
-        
         logger.info(f"🔧 正在加載模型... (設備: {DEVICE})")
         
         if not MODEL_PATH.exists():
@@ -57,22 +55,41 @@ def load_model_from_path():
             model = None
             return False
         
-        # 創建模型實例並加載權重
-        model = DigitRecognitionCNN().to(DEVICE)
+        # 加載檢查點
         checkpoint = torch.load(str(MODEL_PATH), map_location=DEVICE)
         
-        # 判斷保存的格式
+        # 提取 state_dict
         if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
-            model.load_state_dict(checkpoint['state_dict'])
+            state_dict = checkpoint['state_dict']
+        elif isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
+            state_dict = checkpoint['model_state_dict']
         else:
-            model.load_state_dict(checkpoint)
+            state_dict = checkpoint
+        
+        # 自動檢測模型架構
+        from model_compat import get_model_class
+        ModelClass = get_model_class(state_dict)
+        
+        logger.info(f"   模型架構: {ModelClass.__name__}")
+        
+        # 創建模型實例
+        model = ModelClass().to(DEVICE)
+        
+        # 加載權重 (使用 strict=False 處理輕微不匹配)
+        try:
+            model.load_state_dict(state_dict, strict=True)
+            logger.info("✅ 模型加載成功 (完全匹配)")
+        except RuntimeError as e:
+            logger.warning(f"⚠️  精確匹配失敗，嘗試寬鬆匹配...")
+            logger.warning(f"   原因: {str(e)[:100]}...")
+            model.load_state_dict(state_dict, strict=False)
+            logger.info("✅ 模型加載成功 (寬鬆匹配)")
         
         model.eval()  # 評估模式
-        logger.info("✅ 模型加載成功")
         return True
         
-    except ImportError:
-        logger.warning("⚠️ 未能導入模型類，檢查 model.py")
+    except ImportError as e:
+        logger.warning(f"⚠️ 未能導入模型類: {e}")
         return False
     except Exception as e:
         logger.error(f"❌ 模型加載失敗: {str(e)}")
