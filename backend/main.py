@@ -159,7 +159,6 @@ def classify_image_simple(gray, edges, hsv):
 
 if __name__ == "__main__":
     import uvicorn
-    import sys
     from pathlib import Path
     
     # 檢查是否使用 HTTPS
@@ -177,10 +176,10 @@ if __name__ == "__main__":
             ssl_keyfile = str(key_file)
             print("🔐 使用 HTTPS")
     
-    # 啟動 Uvicorn 服務器
+    # 啟動 Uvicorn 服務器（使用應用字符串避免 reload 警告）
     uvicorn.run(
-        app,
-        host="127.0.0.1",  # 改為 localhost，而不是 0.0.0.0
+        "main:app",  # 傳遞應用作為導入字符串
+        host="127.0.0.1",
         port=8000,
         ssl_keyfile=ssl_keyfile,
         ssl_certfile=ssl_certfile,
