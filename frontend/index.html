@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>🔢 手寫數字識別系統</h1>
+            <h1>手寫數字識別系統</h1>
             <p>上傳手寫數字圖片進行智能識別</p>
         </header>
 
@@ -28,28 +28,29 @@
                 </div>
             </div>
 
-            <!-- 預覽區域 -->
+            <!-- 預覽和結果區域 -->
             <div id="previewContainer" class="preview-container hidden">
-                <div class="preview-section">
-                    <h3>圖片預覽</h3>
-                    <img id="previewImage" alt="圖片預覽">
-                </div>
+                <div class="result-layout">
+                    <!-- 左側：圖片預覽 -->
+                    <div class="preview-section">
+                        <h3>圖片預覽</h3>
+                        <div class="image-preview-box">
+                            <img id="previewImage" alt="圖片預覽">
+                        </div>
+                        <button id="recognizeBtn" class="btn btn-primary btn-large">開始識別</button>
+                    </div>
 
-                <!-- 結果區域 -->
-                <div class="result-section">
-                    <button id="recognizeBtn" class="btn btn-primary">開始識別</button>
-                </div>
-            </div>
-
-            <!-- 識別結果 -->
-            <div id="resultContainer" class="result-container hidden">
-                <div class="result-card">
-                    <h3>識別結果</h3>
-                    <div class="result-content">
+                    <!-- 右側：識別結果 -->
+                    <div class="result-section">
+                        <h3>識別結果</h3>
+                        
+                        <!-- 預測數字 -->
                         <div class="result-item highlight">
                             <label>預測數字：</label>
                             <p id="predictedDigit" class="digit-display">-</p>
                         </div>
+
+                        <!-- 置信度 -->
                         <div class="result-item">
                             <label>置信度：</label>
                             <div class="confidence-bar">
@@ -57,10 +58,14 @@
                             </div>
                             <p id="confidenceText">0%</p>
                         </div>
+
+                        <!-- Top 3 預測 -->
                         <div class="result-item">
                             <label>Top 3 預測：</label>
                             <div id="topPredictions" class="predictions-list"></div>
                         </div>
+
+                        <!-- 其他信息 -->
                         <div class="result-item">
                             <label>圖片尺寸：</label>
                             <p id="imageSize">-</p>
@@ -69,36 +74,39 @@
                             <label>識別時間：</label>
                             <p id="timestamp">-</p>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <!-- 反饋/標籤部分 -->
-                        <div class="feedback-section">
-                            <h4>🎓 AI 學習反饋</h4>
-                            <p class="feedback-hint">幫助 AI 改進：選擇正確數字或輸入正確答案</p>
-                            
-                            <div class="feedback-options">
-                                <div class="quick-select">
-                                    <p class="option-label">快速選擇 Top 3：</p>
-                                    <div id="quickSelectButtons" class="button-group"></div>
-                                </div>
+            <!-- 識別結果後的反饋區域 -->
+            <div id="resultContainer" class="result-container hidden">
+                <div class="feedback-card">
+                    <h3>🎓 AI 學習反饋</h3>
+                    <p class="feedback-hint">幫助 AI 改進：選擇正確數字或輸入正確答案</p>
+                    
+                    <div class="feedback-options">
+                        <div class="quick-select">
+                            <p class="option-label">快速選擇 Top 3：</p>
+                            <div id="quickSelectButtons" class="button-group"></div>
+                        </div>
 
-                                <div class="manual-input">
-                                    <p class="option-label">或手動輸入正確數字 (0-9)：</p>
-                                    <div class="input-group">
-                                        <input type="number" id="correctDigitInput" 
-                                               min="0" max="9" placeholder="輸入 0-9" 
-                                               class="digit-input">
-                                        <button id="submitFeedbackBtn" class="btn btn-feedback">
-                                            ✓ 提交反饋
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="feedbackStatus" class="feedback-status hidden">
-                                <p id="feedbackMessage"></p>
+                        <div class="manual-input">
+                            <p class="option-label">或手動輸入正確數字 (0-9)：</p>
+                            <div class="input-group">
+                                <input type="number" id="correctDigitInput" 
+                                       min="0" max="9" placeholder="輸入 0-9" 
+                                       class="digit-input">
+                                <button id="submitFeedbackBtn" class="btn btn-feedback">
+                                    ✓ 提交反饋
+                                </button>
                             </div>
                         </div>
                     </div>
+
+                    <div id="feedbackStatus" class="feedback-status hidden">
+                        <p id="feedbackMessage"></p>
+                    </div>
+                    
                     <button id="resetBtn" class="btn btn-secondary">重新識別</button>
                 </div>
             </div>
